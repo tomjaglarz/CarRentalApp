@@ -1,5 +1,9 @@
-﻿using CarRentalApp.Data;
+﻿using CarRentalApp.Commands;
+using CarRentalApp.Data;
 using CarRentalApp.Models;
+using CarRentalApp.Queries;
+using CarRentalApp.ViewModels;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarRentalApp.Controllers
@@ -8,49 +12,56 @@ namespace CarRentalApp.Controllers
     [ApiController]
     public class CarRentalController : ControllerBase
     {
-        private readonly DataContext _dataContext;
-        public CarRentalController(DataContext dataContext)
+        private readonly IMediator _mediator;
+        public CarRentalController(IMediator mediator)
         {
-            _dataContext= dataContext;
+            _mediator = mediator;
         }
         
         [HttpGet]
-        public IEnumerable<Rental> Get()
+        public async Task<IActionResult> GetAllRentals()
         {
-            return CarRentals();
-            //return _dataContext.Rentals;
+            var response = await _mediator.Send(new GetAllRentalsQuery.Query());
+
+            if (response != null)
+                return Ok(response);
+
+            return NotFound();
         }
 
-        [HttpGet("{id}", Name = "Get")]
-        public Rental GetCarRental(int id)
+        [HttpPost]
+        public async Task<IActionResult> AddRental([FromBody] RentalViewModel rentalViewModel)
         {
-            return CarRentals().FirstOrDefault(rental => rental.Id == id);
+            return Ok(await _mediator.Send(new AddRentalCommand.Command(rentalViewModel)));
         }
 
-        private IEnumerable<Rental> CarRentals()
-        {
-            return new List<Rental>()
-            {
-                new Rental()
-                {
-                    Id = 1,
-                    RentalNumber = 1,
-                    CustomerId = 1,
-                    Car = null,
-                    DateFrom = DateTime.Now.Date,
-                    DateTo= DateTime.Now.AddDays(7).Date,
-                },
-                new Rental()
-                {
-                    Id = 2,
-                    RentalNumber = 2,
-                    CustomerId = 2,
-                    Car = null,
-                    DateFrom = DateTime.Now.Date,
-                    DateTo= DateTime.Now.AddDays(14).Date,
-                }
-            };
-        }
+        
+
+
+        //private IEnumerable<Rental> CarRentals()
+        //{
+        //    return new List<Rental>()
+        //    {
+        //        new Rental()
+        //        {
+        //            Id = 1,
+        //            RentalNumber = 1,
+        //            Customer = null,
+        //            Car = null,
+        //            DateFrom = DateTime.Now.Date,
+        //            DateTo= DateTime.Now.AddDays(7).Date,
+        //        },
+        //        new Rental()
+        //        {
+        //            Id = 2,
+        //            RentalNumber = 2,
+        //            Customer = null,
+        //            Car = null,
+        //            DateFrom = DateTime.Now.Date,
+        //            DateTo= DateTime.Now.AddDays(14).Date,
+        //        }
+        //    };
+        //}
     }
 }
 

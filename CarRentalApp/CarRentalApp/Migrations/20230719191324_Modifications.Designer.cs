@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarRentalApp.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230710190730_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230719191324_Modifications")]
+    partial class Modifications
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,12 +36,6 @@ namespace CarRentalApp.Migrations
                     b.Property<int>("BrandId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FuelTypeId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ModelName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -49,15 +43,38 @@ namespace CarRentalApp.Migrations
                     b.Property<int>("SeatsCount")
                         .HasColumnType("int");
 
-                    b.Property<int>("SpecsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TransmissionTypeId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("Cars");
+                });
+
+            modelBuilder.Entity("CarRentalApp.Models.Customer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Adress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("CarRentalApp.Models.Rental", b =>
@@ -80,12 +97,11 @@ namespace CarRentalApp.Migrations
                     b.Property<DateTime>("DateTo")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("RentalNumber")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CarId");
+
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("Rentals");
                 });
@@ -98,7 +114,15 @@ namespace CarRentalApp.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CarRentalApp.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Car");
+
+                    b.Navigation("Customer");
                 });
 #pragma warning restore 612, 618
         }
