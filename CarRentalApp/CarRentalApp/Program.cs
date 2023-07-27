@@ -13,6 +13,7 @@ if (builder.Environment.IsDevelopment())
 }
 else
 {
+    builder.Configuration.AddEnvironmentVariables().AddJsonFile("appsettings.json");
     connection = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING");
 }
 builder.Services.AddDbContext<DataContext>(options =>
