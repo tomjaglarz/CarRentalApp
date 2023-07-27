@@ -1,6 +1,4 @@
 ﻿using CarRentalApp.Commands;
-using CarRentalApp.Data;
-using CarRentalApp.Models;
 using CarRentalApp.Queries;
 using CarRentalApp.ViewModels;
 using MediatR;
@@ -10,15 +8,16 @@ namespace CarRentalApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CarRentalController : ControllerBase
+    public class RentalController : ControllerBase
     {
         private readonly IMediator _mediator;
-        public CarRentalController(IMediator mediator)
+        public RentalController(IMediator mediator)
         {
             _mediator = mediator;
         }
-        
+
         [HttpGet]
+        [Route("GetAllRentals")]
         public async Task<IActionResult> GetAllRentals()
         {
             var response = await _mediator.Send(new GetAllRentalsQuery.Query());
@@ -35,33 +34,27 @@ namespace CarRentalApp.Controllers
             return Ok(await _mediator.Send(new AddRentalCommand.Command(rentalViewModel)));
         }
 
-        
+        [HttpPut]
+        [Route("Update")]
+        public async Task<IActionResult> UpdateRental(int id, [FromBody] RentalViewModel rentalViewModel)
+        {
+            var response = await _mediator.Send(new UpdateRentalCommand.Command(id, rentalViewModel));
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                return Ok(response);
+            
+            return NotFound(response);
+        }
 
-
-        //private IEnumerable<Rental> CarRentals()
-        //{
-        //    return new List<Rental>()
-        //    {
-        //        new Rental()
-        //        {
-        //            Id = 1,
-        //            RentalNumber = 1,
-        //            Customer = null,
-        //            Car = null,
-        //            DateFrom = DateTime.Now.Date,
-        //            DateTo= DateTime.Now.AddDays(7).Date,
-        //        },
-        //        new Rental()
-        //        {
-        //            Id = 2,
-        //            RentalNumber = 2,
-        //            Customer = null,
-        //            Car = null,
-        //            DateFrom = DateTime.Now.Date,
-        //            DateTo= DateTime.Now.AddDays(14).Date,
-        //        }
-        //    };
-        //}
+        [HttpDelete]
+        [Route("Delete")]
+        public async Task<IActionResult> DeleteRental(int id)
+        {
+            var response = await _mediator.Send(new DeleteRentalCommand.Command(id));
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                return Ok(response);
+            
+            return NotFound(response);
+        }
     }
 }
 

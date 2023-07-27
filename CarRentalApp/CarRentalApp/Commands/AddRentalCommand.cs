@@ -31,7 +31,7 @@ namespace CarRentalApp.Commands
                 };
 
                 _dataContext.Rentals.Add(rental);
-                _dataContext.SaveChanges();
+                await _dataContext.SaveChangesAsync();
 
                 if (rental.Id > 0)
                     return new CQRSCommandResponse { StatusCode = HttpStatusCode.OK, ReturnedId = rental.Id };
