@@ -4,32 +4,11 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Configuration.AddEnvironmentVariables().AddJsonFile("appsettings.json");
+string connection = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
 
-var connection = String.Empty;
-if (builder.Environment.IsDevelopment())
-{
-    builder.Configuration.AddEnvironmentVariables().AddJsonFile("appsettings.Development.json");
-    connection = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
-}
-else
-{
-    builder.Configuration.AddEnvironmentVariables().AddJsonFile("appsettings.json");
-    connection = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING");
-}
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(connection));
-
-builder.Services.AddCors(options =>
-{
-
-    options.AddDefaultPolicy(
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:3000")
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-        });
-});
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 builder.Services.AddControllersWithViews();
