@@ -19,28 +19,28 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
-    {
-        Description = "API Key is required",
-        Type = SecuritySchemeType.ApiKey,
-        Name = "XApiKey",
-        In = ParameterLocation.Header,
-        Scheme = "ApiKeyScheme"
-    });
-    var key = new OpenApiSecurityScheme()
-    {
-        Reference = new OpenApiReference
-        {
-            Type = ReferenceType.SecurityScheme,
-            Id = "ApiKey"
-        },
-        In = ParameterLocation.Header
-    };
-    var requirement = new OpenApiSecurityRequirement
-                    {
-                             { key, new List<string>() }
-                    };
-    c.AddSecurityRequirement(requirement);
+    //c.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+    //{
+    //    Description = "API Key is required",
+    //    Type = SecuritySchemeType.ApiKey,
+    //    Name = "XApiKey",
+    //    In = ParameterLocation.Header,
+    //    Scheme = "ApiKeyScheme"
+    //});
+    //var key = new OpenApiSecurityScheme()
+    //{
+    //    Reference = new OpenApiReference
+    //    {
+    //        Type = ReferenceType.SecurityScheme,
+    //        Id = "ApiKey"
+    //    },
+    //    In = ParameterLocation.Header
+    //};
+    //var requirement = new OpenApiSecurityRequirement
+    //                {
+    //                         { key, new List<string>() }
+    //                };
+    //c.AddSecurityRequirement(requirement);
 });
 builder.Services.AddCors(options =>
 {
@@ -73,7 +73,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
-app.UseMiddleware<ApiKeyMiddleware>();
+//app.UseMiddleware<ApiKeyMiddleware>();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
