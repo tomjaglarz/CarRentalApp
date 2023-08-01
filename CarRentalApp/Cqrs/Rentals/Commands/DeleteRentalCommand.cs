@@ -3,7 +3,7 @@ using CarRentalApp.Logic;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace CarRentalApp.Commands
+namespace CarRentalApp.Cqrs.Rentals.Commands
 {
     public class DeleteRentalCommand
     {
@@ -14,7 +14,7 @@ namespace CarRentalApp.Commands
             private readonly DataContext _dataContext;
             public Handler(DataContext dataContext)
             {
-                _dataContext= dataContext;
+                _dataContext = dataContext;
             }
 
             public async Task<CQRSCommandResponse> Handle(Command request, CancellationToken cancellationToken)
@@ -26,7 +26,7 @@ namespace CarRentalApp.Commands
                 }
 
                 _dataContext.Rentals.Remove(rentalToDelete);
-                var saveResult = await _dataContext.SaveChangesAsync();
+                var saveResult = await _dataContext.SaveChangesAsync(cancellationToken);
 
                 return saveResult > 0
                     ? new CQRSCommandResponse { StatusCode = System.Net.HttpStatusCode.OK, ReturnedId = request.Id }

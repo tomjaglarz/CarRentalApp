@@ -1,9 +1,9 @@
 ﻿using CarRentalApp.Data;
 using CarRentalApp.Logic;
-using CarRentalApp.ViewModels;
+using CarRentalApp.Models.ViewModels;
 using MediatR;
 
-namespace CarRentalApp.Commands
+namespace CarRentalApp.Cqrs.Rentals.Commands
 {
     public class UpdateRentalCommand
     {
@@ -31,7 +31,7 @@ namespace CarRentalApp.Commands
                     rentalToUpdate.DateFrom = request.RentalViewModel.DateFrom;
                     rentalToUpdate.DateTo = request.RentalViewModel.DateTo;
                 }
-                var saveResult = await _dataContext.SaveChangesAsync();
+                var saveResult = await _dataContext.SaveChangesAsync(cancellationToken);
 
                 return saveResult > 0
                     ? new CQRSCommandResponse { StatusCode = System.Net.HttpStatusCode.OK, ReturnedId = request.Id }

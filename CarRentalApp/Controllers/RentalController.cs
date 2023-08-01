@@ -1,6 +1,6 @@
-﻿using CarRentalApp.Commands;
-using CarRentalApp.Queries;
-using CarRentalApp.ViewModels;
+﻿using CarRentalApp.Cqrs.Rentals.Commands;
+using CarRentalApp.Cqrs.Rentals.Queries;
+using CarRentalApp.Models.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,6 +26,19 @@ namespace CarRentalApp.Controllers
                 return Ok(response);
 
             return NotFound();
+        }
+
+        [HttpGet]
+        [Route("GetRentalById")]
+        public async Task<IActionResult> GetRetnalById(int id)
+        {
+            var response = await _mediator.Send(new GetRentalByIdQuery.Query(id));
+
+            if (response != null)
+                return Ok(response);
+
+            return NotFound();
+
         }
 
         [HttpPost]
@@ -57,11 +70,3 @@ namespace CarRentalApp.Controllers
         }
     }
 }
-
-
-//public int Id { get; set; }
-//public int RentalNumber { get; set; }
-//public int CustomerId { get; set; }
-//public Car Car { get; set; }
-//public DateTime DateFrom { get; set; }
-//public DateTime DateTo { get; set; }

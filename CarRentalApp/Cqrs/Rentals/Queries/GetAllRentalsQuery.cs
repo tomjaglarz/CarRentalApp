@@ -3,7 +3,7 @@ using CarRentalApp.Logic;
 using CarRentalApp.Models;
 using MediatR;
 
-namespace CarRentalApp.Queries
+namespace CarRentalApp.Cqrs.Rentals.Queries
 {
     public class GetAllRentalsQuery
     {
@@ -24,11 +24,19 @@ namespace CarRentalApp.Queries
 
             public async Task<CQRSQueryResponse<Response>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var rentals = _dataContext.Rentals;
+                var rentals = _dataContext.GetAllRentals();
 
                 return rentals.Any() ?
-                    new CQRSQueryResponse<Response> { StatusCode = System.Net.HttpStatusCode.OK, QueryResult = new Response(rentals.ToList()) } :
-                    new CQRSQueryResponse<Response> { StatusCode = System.Net.HttpStatusCode.NotFound, ErrorMessage = "No items found!" };
+                    new CQRSQueryResponse<Response>
+                    {
+                        StatusCode = System.Net.HttpStatusCode.OK,
+                        QueryResult = new Response(rentals.ToList())
+                    } :
+                    new CQRSQueryResponse<Response>
+                    {
+                        StatusCode = System.Net.HttpStatusCode.NotFound,
+                        ErrorMessage = "No items found!"
+                    };
             }
         }
         public class Response
