@@ -1,12 +1,12 @@
 ﻿using CarRentalApp.Data;
 using CarRentalApp.Logic;
 using CarRentalApp.Models;
-using CarRentalApp.ViewModels;
+using CarRentalApp.Models.ViewModels;
 using MediatR;
 using System.Net;
 using System.Windows.Input;
 
-namespace CarRentalApp.Commands
+namespace CarRentalApp.Cqrs.Rentals.Commands
 {
     public static class AddRentalCommand
     {
@@ -31,7 +31,7 @@ namespace CarRentalApp.Commands
                 };
 
                 _dataContext.Rentals.Add(rental);
-                await _dataContext.SaveChangesAsync();
+                await _dataContext.SaveChangesAsync(cancellationToken);
 
                 if (rental.Id > 0)
                     return new CQRSCommandResponse { StatusCode = HttpStatusCode.OK, ReturnedId = rental.Id };

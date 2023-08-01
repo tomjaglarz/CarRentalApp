@@ -11,5 +11,10 @@ namespace CarRentalApp.Data
         public DbSet<Car> Cars { get; set; }
         public DbSet<Rental> Rentals { get; set; }
         public DbSet<Customer> Customers { get; set; }
+
+        public IList<Rental> GetAllRentals()
+        {
+            return Rentals.ToList();
+        }
     }
 }
