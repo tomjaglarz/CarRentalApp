@@ -11,8 +11,8 @@ namespace CarRentalApp.Cqrs.Rentals.Commands
 
         public class Handler : IRequestHandler<Command, CQRSCommandResponse>
         {
-            private readonly DataContext _dataContext;
-            public Handler(DataContext dataContext)
+            private readonly IDataContext _dataContext;
+            public Handler(IDataContext dataContext)
             {
                 _dataContext = dataContext;
             }

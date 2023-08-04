@@ -16,8 +16,8 @@ namespace CarRentalApp.Cqrs.Rentals.Queries
 
         public class Handler : IRequestHandler<Query, CQRSQueryResponse<Response>>
         {
-            private readonly DataContext _dataContext;
-            public Handler(DataContext dataContext)
+            private readonly IDataContext _dataContext;
+            public Handler(IDataContext dataContext)
             {
                 _dataContext = dataContext;
             }
@@ -41,8 +41,8 @@ namespace CarRentalApp.Cqrs.Rentals.Queries
         }
         public class Response
         {
-            public List<Rental> RentalsList { get; } = new List<Rental>();
-            public Response(List<Rental> rentalsList)
+            public IEnumerable<Rental> RentalsList { get; } = new List<Rental>();
+            public Response(IEnumerable<Rental> rentalsList)
             {
                 RentalsList = rentalsList;
             }

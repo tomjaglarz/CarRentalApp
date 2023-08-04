@@ -11,8 +11,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddEnvironmentVariables().AddJsonFile("appsettings.json");
 string connection = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
 
+
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(connection));
+builder.Services.AddScoped<IDataContext, DataContext>();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 builder.Services.AddControllersWithViews();
@@ -56,6 +58,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddLogging((loggingBuilder) => loggingBuilder
         .SetMinimumLevel(LogLevel.Trace)
         .AddConsole());
+
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
 
 var app = builder.Build();
