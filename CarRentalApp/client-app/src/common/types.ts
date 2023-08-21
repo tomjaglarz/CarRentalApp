@@ -3,8 +3,20 @@ interface Response {
     errorMessage?: string
 }
 
-export interface GetAllRentalsResponse extends Response {
+interface RentalsList{
     rentalsList: Rental[]
+}
+
+interface CustomersList{
+    customersList: Customer[]
+}
+
+export interface GetAllRentalsResponse extends Response {
+    queryResult: RentalsList
+}
+
+export interface GetAllCustomersResponse extends Response {
+    queryResult: CustomersList
 }
 
 export interface CommandResponse extends Response {
@@ -16,5 +28,17 @@ export interface Rental {
     carId: number,
     customerId: number,
     dateFrom: Date,
-    dateTo: Date
+    dateTo: Date,
+}
+
+export interface Customer{
+    id: number,
+    firstName: string,
+    lastName: string,
+    email: string,
+    adress: string
+}
+
+export interface Car{
+
 }

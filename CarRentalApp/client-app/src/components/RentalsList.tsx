@@ -1,46 +1,59 @@
 import React, { useState, useEffect } from "react";
-import '../assets/App.css';
 import '../common/types';
-import { Rental, GetAllRentalsResponse } from "../common/types";
+import Table from 'react-bootstrap/Table';
+import * as rentalApi from '../api/rental/api';
+
+import { Rental } from "../common/types";
+import { Button } from "react-bootstrap";
+import AddNewRental from "./AddNewRental";
 
 
 function RentalList() {
     const [rentals, setRentals] = useState<Rental[]>([]);
     
     useEffect(() => {
-        fetch('https://localhost:7173/api/Rental/GetAllRentals')
-            .then(response => response.json())
-            .then(data => data["queryResult"] as GetAllRentalsResponse)
-            .then(rentals => setRentals(rentals.rentalsList));
+        rentalApi.GetAllRentals()
+            .then(rentals => setRentals(rentals))
+            .catch(error => console.log(error));
     }, []);
 
+   function RemoveRental(rentalId: number){
+        rentalApi.DeleteRental(rentalId)
+            .then(_ => setRentals(rentals.filter(rental => rental.id != rentalId)))
+            .catch(error => console.log(error));
+   }
     
     return (
-        <div className="App.css">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Car ID</th>
-                        <th>Customer ID</th>
-                        <th>Date From</th>
-                        <th>Date To</th>
+        <><div className="App.css">
+        <Table striped hover bordered>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Car</th>
+                    <th>Customer</th>
+                    <th>Date From</th>
+                    <th>Date To</th>
+                </tr>
+            </thead>
+            <tbody>
+                {rentals.map(rental => (
+                    <tr key={rental.id}>
+                        <td>{rental.id}</td>
+                        <td>{rental.carId}</td>
+                        <td>{rental.customerId}</td>
+                        <td>{new Date(rental.dateFrom).toLocaleDateString()}</td>
+                        <td>{new Date(rental.dateTo).toLocaleDateString()}</td>
+                        <td>
+                            <Button variant="primary" size="sm">Edit</Button>
+                            <Button variant="danger" size="sm" onClick={() => RemoveRental(rental.id)}>Remove</Button>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    {rentals.map(rental => (
-                        <tr key={rental.id}>
-                            <td>{rental.id}</td>
-                            <td>{rental.carId}</td>
-                            <td>{rental.customerId}</td>
-                            <td>{rental.dateFrom.toString()}</td>
-                            <td>{rental.dateTo.toString()}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-                
-        </div>
+                ))}
+            </tbody>
+        </Table>
+    </div>
+    <AddNewRental></AddNewRental></>
+        
     );
 }
 
