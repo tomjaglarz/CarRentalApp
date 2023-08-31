@@ -11,12 +11,20 @@ interface CustomersList{
     customersList: Customer[]
 }
 
+interface CarsList{
+    carsList: Car[]
+}
+
 export interface GetAllRentalsResponse extends Response {
     queryResult: RentalsList
 }
 
 export interface GetAllCustomersResponse extends Response {
     queryResult: CustomersList
+}
+
+export interface GetAllCarsResponse extends Response {
+    queryResult: CarsList
 }
 
 export interface CommandResponse extends Response {
@@ -40,5 +48,8 @@ export interface Customer{
 }
 
 export interface Car{
-
+    id: number,
+    brand: string,
+    modelName: string,
+    seatsCount: number
 }

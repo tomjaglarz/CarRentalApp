@@ -9,6 +9,7 @@ const instance = axios.create({
 export async function GetAllRentals() : Promise<types.Rental[]>{
 
     try{
+        //await new Promise(f => setTimeout(f, 4000));
         const response = await instance.get<types.GetAllRentalsResponse>('/GetAllRentals');
         return response.data.queryResult.rentalsList;
     }

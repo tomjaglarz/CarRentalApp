@@ -2,10 +2,12 @@
 using CarRentalApp.Cqrs.Rentals.Queries;
 using CarRentalApp.Models.ViewModels;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarRentalApp.Controllers
 {
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class RentalController : ControllerBase

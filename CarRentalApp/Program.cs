@@ -2,7 +2,9 @@ using CarRentalApp.Data;
 using CarRentalApp.Logic.Behaviours;
 using CarRentalApp.Middleware;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +21,22 @@ builder.Services.AddScoped<IDataContext, DataContext>();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(x =>
+{
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+
+    };
+});
+
+builder.Services.AddAuthorization();
+
 builder.Services.AddSwaggerGen(c =>
 {
     //c.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
@@ -76,7 +94,8 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
-//app.UseMiddleware<ApiKeyMiddleware>();
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
