@@ -11,8 +11,8 @@ function App(){
             <NavigationBar></NavigationBar>
             <div className="containter"> 
                 <Routes>
-                    <Route path="/rentals" element={<RentalList></RentalList>}></Route>
-                    {/* <Route path="/rentals" element={<RequireAuth loginPath="/login"><RentalList></RentalList></RequireAuth>}></Route> */}
+                    {/* <Route path="/rentals" element={<RentalList></RentalList>}></Route> */}
+                    <Route path="/rentals" element={<RequireAuth loginPath="/login"><RentalList></RentalList></RequireAuth>}></Route>
                     <Route path="/cars" element={<CarsList></CarsList>}></Route>
                     <Route path="/login" element={<Login></Login>}></Route>
                 </Routes>

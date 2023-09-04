@@ -1,11 +1,15 @@
+using CarRentalApp.Configurations;
 using CarRentalApp.Data;
 using CarRentalApp.Logic.Behaviours;
 using CarRentalApp.Middleware;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,49 +22,66 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(connection));
 builder.Services.AddScoped<IDataContext, DataContext>();
 
+builder.Services.AddOptions();
+builder.Services.Configure<JwtConfig>(opts => builder.Configuration.GetSection("JwtConfig").Bind(opts));
+
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddAuthentication(x =>
+builder.Services.AddAuthentication(options =>
 {
-    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(x =>
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(jwt =>
 {
-    x.TokenValidationParameters = new TokenValidationParameters
+    jwt.SaveToken = true;
+    jwt.TokenValidationParameters = new TokenValidationParameters
     {
-
+        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Secret"]!)),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true
     };
 });
 
+//builder.Services.AddIdentity<IdentityUser, IdentityRole>();
+
 builder.Services.AddAuthorization();
 
-builder.Services.AddSwaggerGen(c =>
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+        .AddEntityFrameworkStores<DataContext>();
+
+builder.Services.AddSwaggerGen(option =>
 {
-    //c.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
-    //{
-    //    Description = "API Key is required",
-    //    Type = SecuritySchemeType.ApiKey,
-    //    Name = "XApiKey",
-    //    In = ParameterLocation.Header,
-    //    Scheme = "ApiKeyScheme"
-    //});
-    //var key = new OpenApiSecurityScheme()
-    //{
-    //    Reference = new OpenApiReference
-    //    {
-    //        Type = ReferenceType.SecurityScheme,
-    //        Id = "ApiKey"
-    //    },
-    //    In = ParameterLocation.Header
-    //};
-    //var requirement = new OpenApiSecurityRequirement
-    //                {
-    //                         { key, new List<string>() }
-    //                };
-    //c.AddSecurityRequirement(requirement);
+    option.SwaggerDoc("v1", new OpenApiInfo { Title = "Car Rental API", Version = "v1" });
+    option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter a valid token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+    option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            new string[]{}
+        }
+    });
 });
 builder.Services.AddCors(options =>
 {
@@ -95,10 +116,10 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
-app.UseAuthorization();
-app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
+app.UseStaticFiles();
+
 
 
 app.MapControllerRoute(

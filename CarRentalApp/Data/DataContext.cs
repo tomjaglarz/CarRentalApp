@@ -1,9 +1,10 @@
 ﻿using CarRentalApp.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarRentalApp.Data
 {
-    public class DataContext : DbContext, IDataContext
+    public class DataContext : IdentityDbContext, IDataContext
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {

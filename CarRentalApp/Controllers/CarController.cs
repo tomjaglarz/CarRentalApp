@@ -3,9 +3,11 @@ using CarRentalApp.Cqrs.Cars.Commands;
 using CarRentalApp.Models.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CarRentalApp.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CarController : ControllerBase
