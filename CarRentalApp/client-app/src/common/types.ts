@@ -15,6 +15,13 @@ interface CarsList{
     carsList: Car[]
 }
 
+interface LoginResult{
+
+    token:string,
+    isAuthorized: boolean,
+    message: string
+}
+
 export interface GetAllRentalsResponse extends Response {
     queryResult: RentalsList
 }
@@ -25,6 +32,10 @@ export interface GetAllCustomersResponse extends Response {
 
 export interface GetAllCarsResponse extends Response {
     queryResult: CarsList
+}
+
+export interface LoginResponse extends Response {
+    queryResult: LoginResult
 }
 
 export interface CommandResponse extends Response {
@@ -52,4 +63,9 @@ export interface Car{
     brand: string,
     modelName: string,
     seatsCount: number
+}
+
+export interface LoginData{
+    email: string,
+    password: string
 }

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace CarRentalApp.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CarController : ControllerBase
