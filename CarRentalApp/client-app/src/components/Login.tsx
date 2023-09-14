@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useSignIn } from 'react-auth-kit';
-import axios from 'axios';
 import { Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { LoginData, LoginResponse } from '../common/types';
@@ -15,6 +14,9 @@ export default function Login() {
     const { register, handleSubmit, formState } = form;
     const [loginError, setLoginError] = useState('')
     const { errors } = formState;
+
+    const test = process.env.API_URL;
+    console.log(process.env.REACT_APP_API_URL);
 
     const onSubmit = (data: LoginData) => {
 

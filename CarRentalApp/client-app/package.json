@@ -17,7 +17,7 @@
     "@types/react-dom": "^18.2.6",
     "bootstrap": "^5.3.1",
     "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
+    "env-cmd": "^10.1.0",
     "react": "^18.2.0",
     "react-auth-kit": "^2.12.6",
     "react-bootstrap": "^2.8.0",
@@ -33,10 +33,14 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "env-cmd -f .env.development react-scripts start",
+    "build": "env-cmd -f .env.development react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "start:development:local": "env-cmd -f .env.development.local react-scripts start",
+    "build:development:local": "env-cmd -f .env.development.local react-scripts build",
+    "start:development": "env-cmd -f .env.development react-scripts start",
+    "build:development": "env-cmd -f .env.development react-scripts build"
   },
   "eslintConfig": {
     "extends": [
@@ -55,5 +59,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "dotenv": "^16.3.1"
   }
 }

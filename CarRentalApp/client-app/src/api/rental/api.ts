@@ -6,7 +6,7 @@ const cookies = new Cookies();
 const jwtToken = cookies.get('_auth');
 
 const instance = axios.create({
-    baseURL: 'https://localhost:7173/api/Rental/',
+    baseURL: `${process.env.REACT_APP_API_URL}/Rental/`,
     timeout: 30000,
     headers:{
         "Authorization": `Bearer ${jwtToken}`

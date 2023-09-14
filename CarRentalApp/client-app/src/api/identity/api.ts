@@ -16,7 +16,7 @@ export async function GetAllCars(): Promise<types.Car[]> {
     catch (error) {
         throw new Error('Error occured.');
     }
-}
+} 
 
 export async function LogIn(loginData: types.LoginData): Promise<types.LoginResponse> {
     
