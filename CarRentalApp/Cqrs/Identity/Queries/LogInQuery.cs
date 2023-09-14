@@ -85,7 +85,7 @@ namespace CarRentalApp.Cqrs.Identity.Queries
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = new ClaimsIdentity(claims),
-                    Expires = DateTime.UtcNow.AddHours(1),
+                    Expires = DateTime.UtcNow.AddMinutes(15),
                     Issuer = _jwtConfig.Issuer,
                     Audience = _jwtConfig.Audience,
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)

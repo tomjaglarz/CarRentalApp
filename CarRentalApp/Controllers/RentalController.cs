@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CarRentalApp.Controllers
 {
-    //[Authorize]
+
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class RentalController : ControllerBase
@@ -18,6 +19,7 @@ namespace CarRentalApp.Controllers
             _mediator = mediator;
         }
 
+        
         [HttpGet]
         [Route("GetAllRentals")]
         public async Task<IActionResult> GetAllRentals()

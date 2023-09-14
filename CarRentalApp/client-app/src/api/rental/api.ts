@@ -1,10 +1,17 @@
 ﻿import * as types from '../../common/types';
 import axios from 'axios';
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
+const jwtToken = cookies.get('_auth');
 
 const instance = axios.create({
     baseURL: 'https://localhost:7173/api/Rental/',
     timeout: 30000,
-});
+    headers:{
+        "Authorization": `Bearer ${jwtToken}`
+    }
+  });
 
 export async function GetAllRentals() : Promise<types.Rental[]>{
 
