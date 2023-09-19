@@ -7,7 +7,7 @@ const token = cookies.get('_auth');
 const authType = cookies.get('_auth_type')
 
 const instance = axios.create({
-    baseURL: 'https://localhost:7173/api/Customer/',
+    baseURL: `${process.env.REACT_APP_API_URL}/Customer/`,
     timeout: 30000,
     headers:{
         "Authorization": `${authType} ${token}`

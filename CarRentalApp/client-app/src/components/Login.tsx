@@ -15,9 +15,6 @@ export default function Login() {
     const [loginError, setLoginError] = useState('')
     const { errors } = formState;
 
-    const test = process.env.API_URL;
-    console.log(process.env.REACT_APP_API_URL);
-
     const onSubmit = (data: LoginData) => {
 
         console.log("Logging in...");
